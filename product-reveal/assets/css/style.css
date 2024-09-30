@@ -1,0 +1,119 @@
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: Poppins;
+  color: #1e1e1e;
+  background-color: #cdcdcd;
+  background-image: repeating-linear-gradient(
+      to right,
+      transparent 0 150px,
+      #0001 150px 151px
+    ),
+    repeating-linear-gradient(to bottom, transparent 0 150px, #0001 150px 151px),
+    linear-gradient(to right, #cdcdcdcc, #cdcdcdcc), url(../img/bg.jpg);
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.benner {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.product {
+  width: 500px;
+  height: 500px;
+  /* background-color: red; */
+  position: absolute;
+  bottom: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: 0.7s;
+  z-index: 1;
+  display: flex;
+  --left: 0;
+}
+
+.soda {
+  transition: 0.7s;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.product:hover {
+  --left: -1000px;
+  transform: translateX(-50%) translateY(-50px);
+}
+
+.soda1 {
+  background: url(../img//bg.png) var(--left) 0, url(../img/mockup.png);
+  background-size: auto 100%;
+  width: 280px;
+  aspect-ratio: 2/4;
+  background-blend-mode: multiply;
+  mask-image: url(../img/mockup.png);
+  mask-size: auto 100%;
+}
+.soda2 {
+  background: url(../img//bg2.png) var(--left) 0, url(../img/mockup.png);
+  background-size: auto 100%;
+  width: 280px;
+  aspect-ratio: 2/4;
+  background-blend-mode: multiply;
+  mask-image: url(../img/mockup.png);
+  mask-size: auto 100%;
+  opacity: 0;
+}
+
+.product:hover .soda2 {
+  opacity: 1;
+}
+
+.rock {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  isolation: isolate;
+}
+.rock img {
+  position: absolute;
+  transition: 0.7s;
+}
+.rock img:first-child {
+  height: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -30px;
+  z-index: 1;
+}
+
+.rock img:nth-child(2) {
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+  height: 50%;
+}
+
+.rock img:nth-child(3) {
+  height: 100%;
+  right: 0;
+  bottom: -100px;
+  rotate: -25deg;
+  z-index: 0;
+}
+
+.benner:has(.product:hover) .rock img:first-child {
+  transform: translateX(-50%) translateY(30%);
+}
+
+.benner:has(.product:hover) .rock img:nth-child(2) {
+  transform: translateX(-100px) translateY(100px);
+}
+
+.benner:has(.product:hover) .rock img:nth-child(3) {
+  transform: translateX(100px) translateY(100px);
+}
