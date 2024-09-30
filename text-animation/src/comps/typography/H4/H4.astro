@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+interface Props extends HTMLAttributes<"h4"> {
+    className?: string;
+}
+
+const { className = "", ...rest } = Astro.props;
+
+const h4 = tv({
+    base: ["font-SourceSerif", "font-400 text-16", "lg:text-18"],
+});
+---
+
+<h4 class={h4({ class: className })} {...rest}>
+    <slot />
+</h4>

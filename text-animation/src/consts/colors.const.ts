@@ -1,0 +1,40 @@
+export enum COLORS {
+  "primary-50" = "#F9F0FF",
+  "primary-100" = "#F4E0FF",
+  "primary-200" = "#F4E0FF",
+  "primary-300" = "#DB9EFF",
+  "primary-400" = "#D080FF",
+  "primary-500" = "#C561FF",
+  "primary-600" = "#C561FF",
+  "primary-700" = "#AD1FFF",
+  "primary-800" = "#A100FF",
+  "primary-900" = "#510080",
+
+  "secondary-50" = "#FBEFF9",
+  "secondary-100" = "#F7E3F5",
+  "secondary-200" = "#F7E3F5",
+  "secondary-300" = "#E6A7DE",
+  "secondary-400" = "#DF8BD4",
+  "secondary-500" = "#D66CC8",
+  "secondary-600" = "#DF8BD4",
+  "secondary-700" = "#CE50BD",
+  "secondary-800" = "#A42E94",
+  "secondary-900" = "#54174C",
+
+  "neutral-50" = "#FFFFFF",
+  "neutral-100" = "#F2F2F2",
+  "neutral-200" = "#D9D9D9",
+  "neutral-300" = "#BFBFBF",
+  "neutral-400" = "#A6A6A6",
+  "neutral-500" = "#8C8C8C",
+  "neutral-600" = "#737373",
+  "neutral-700" = "#595959",
+  "neutral-800" = "#404040",
+  "neutral-900" = "#262626",
+
+  "white" = "#fff",
+  "black" = "#000",
+  "transparent" = "transparent",
+}
+
+export type ColorProps = keyof typeof COLORS;

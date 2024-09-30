@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+interface Props extends HTMLAttributes<"p"> {
+    className?: string;
+}
+
+const { className = "", ...rest } = Astro.props;
+
+const subtle = tv({
+    base: ["font-OpenSans", "font-400 text-10"],
+});
+---
+
+<p class={subtle({ class: className })} {...rest}>
+    <slot />
+</p>

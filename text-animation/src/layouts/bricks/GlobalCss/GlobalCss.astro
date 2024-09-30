@@ -1,0 +1,124 @@
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  body {
+    line-height: 1.4;
+    min-height: 100vh;
+    overflow-y: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Open Sans", sans-serif;
+  }
+  body.no-scroll {
+    overflow: hidden;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  figure,
+  blockquote,
+  dl,
+  dd,
+  ul {
+    margin-block-end: 0;
+    margin-block-start: 0;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  button,
+  input,
+  label {
+    line-height: 1.1;
+  }
+
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+    color: currentColor;
+  }
+
+  ul[role="list"],
+  ol[role="list"] {
+    list-style: none;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  textarea:not([rows]) {
+    min-height: 10em;
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  :target {
+    scroll-margin-block: 5ex;
+  }
+
+  @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+    input[type="checkbox"],
+    input[type="radio"],
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  [data-scrollbar="hide"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-scrollbar="hide"]::-webkit-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>
