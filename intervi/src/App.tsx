@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import gsap from 'gsap';
 import { Observer } from 'gsap/all';
@@ -11,10 +11,14 @@ import SplitType from "./_gsap/assets/SplitText"
 function App() {
 
   const sectionElems = useRef<HTMLElement[]>([]);
+  const contentHeading = useRef<HTMLHeadingElement | null>(null);
+
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     // Grab the sections and header element
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];
-    const head_elem = document.querySelector('h2') as HTMLHeadElement;
+    const head_elem = contentHeading.current;
 
     let currentIndex = -1;
     let animating = false;
@@ -82,8 +86,73 @@ function App() {
       preventDefault: true,
     });
 
+    observer.disable();
     // Start at the first section
     gotoSection(0, 1);
+
+    function couterAnimation() {
+      const counterElem = document.querySelector("#progressHeading span");
+      if (!counterElem) return
+      const loadTimeline = gsap.timeline();
+
+      loadTimeline.to(counterElem, {
+        textContent: 100,
+        duration: 6,
+        ease: " Power1.easeIn",
+        snap: { textContent: 3 },
+        onUpdate: function () {
+          // Update the text with the current value + %
+          counterElem.textContent = counterElem.textContent + "%";
+        },
+
+      }).to("#loadOverlay", {
+        y: 0,
+        duration: 6,
+        ease: " Power1.easeIn",
+      }, "<")
+        .to(counterElem, {
+          yPercent: -100,
+          ease: "power2.in",
+          onComplete: () => {
+            counterElem.textContent = "Hello."
+            counterElem.setAttribute("style", "opacity:0")
+          }
+        })
+        .to(counterElem, {
+          yPercent: 100,
+          ease: "power2.in",
+          onComplete: () => {
+            counterElem.setAttribute("style", "opacity:1;transform: translateY(100%);")
+          }
+        },).to(
+          counterElem, {
+          yPercent: 0,
+          ease: "power2.in",
+        }
+        ).to(
+          counterElem, {
+          yPercent: -100,
+          ease: "power2.in",
+        }, "+=0.5"
+        ).to("#loading", {
+          yPercent: -100,
+          duration: 1.8,
+          ease: "expo.inOut",
+          onComplete: () => {
+            observer.enable();
+            setLoading(false)
+          }
+        })
+
+
+
+
+
+    }
+
+    couterAnimation();
+
+
 
     // Function for pagination
     // function jumpToSection(index: number) {
@@ -105,6 +174,24 @@ function App() {
 
   return (
     <>
+      {/* loading animation start  */}
+
+      {
+        loading
+        && (
+          <div id='loading' className='w-screen h-screen absolute inset-0 bg-blue-800 z-50'>
+            <div className='w-full h-full bg-blue-900 translate-y-full fixed' id='loadOverlay'></div>
+            <div className='grid place-content-center w-full h-full'>
+              <h4 id='progressHeading' className='relative flex justify-center items-center text-7xl text-white overflow-hidden'><span className='inline-block'>0%</span></h4>
+            </div>
+          </div>
+        )
+      }
+
+      {/* loading animation start  */}
+
+      {/* section start */}
+
       <section className='w-screen h-screen bg-[#f1f1f1] absolute inset-0 ' >
         <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
           <img src={img1} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
@@ -126,11 +213,19 @@ function App() {
         </div>
       </section>
 
+      {/* section end */}
+
+
+      {/* conetnt start */}
+
       <div className='w-screen h-screen z-10 relative px-4 lg:px-20 max-lg:py-20'>
         <div className='flex flex-col justify-center w-full h-full lg:w-1/2 max-lg:justify-start'>
-          <h2 className=' text-3xl font-bold lg:text-6xl relative'>Lorem ipsum dolor sit,Lorem ipsum dolor sit,</h2>
+          <h2 className=' text-3xl font-bold lg:text-7xl relative' ref={contentHeading}>Lorem ipsum dolor sit,Lorem ipsum dolor sit,</h2>
         </div>
       </div>
+
+      {/* conetnt start */}
+
     </>
   )
 }
