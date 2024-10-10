@@ -1,5 +1,8 @@
-// src/@types/gsap.d.ts
-declare module ".gsap" {
-  const SplitText: unknown;
-  export default SplitText;
+declare module "gsap/all" {
+  export * from "gsap";
 }
+
+// declare module "gsap/SplitText" {
+//   const SplitText: unknown;
+//   export default SplitText;
+// }

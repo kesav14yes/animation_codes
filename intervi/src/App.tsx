@@ -35,7 +35,7 @@ function App() {
 
     // Timeline definition (avoid creating multiple timelines for performance)
     const tl = gsap.timeline({ paused: true });
-    const tl2 = gsap.timeline();
+    // const tl2 = gsap.timeline();
 
 
     // Function to handle section transitions
@@ -62,7 +62,7 @@ function App() {
 
       currentIndex = index; // Update the current index
 
-      tl2.fromTo(typeSplit.words, {
+      gsap.fromTo(typeSplit.words, {
         y: "0",
 
       }, {
@@ -126,8 +126,8 @@ function App() {
         </div>
       </section>
 
-      <div className='w-screen h-screen z-10 relative px-4 lg:px-20'>
-        <div className='flex flex-col justify-center w-full h-full lg:w-1/2'>
+      <div className='w-screen h-screen z-10 relative px-4 lg:px-20 max-lg:py-20'>
+        <div className='flex flex-col justify-center w-full h-full lg:w-1/2 max-lg:justify-start'>
           <h2 className=' text-3xl font-bold lg:text-6xl relative'>Lorem ipsum dolor sit,Lorem ipsum dolor sit,</h2>
         </div>
       </div>
