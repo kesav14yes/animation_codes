@@ -2,151 +2,135 @@ import { useEffect, useRef } from 'react'
 import './App.css'
 import gsap from 'gsap';
 import { Observer } from 'gsap/all';
+import img1 from "./assets/img_01.webp";
+import img2 from "./assets/img_02.webp";
+import img3 from "./assets/IMG_03.webp";
+import img4 from "./assets/img_04.webp";
+import SplitType from "./_gsap/assets/SplitText"
 
 function App() {
 
   const sectionElems = useRef<HTMLElement[]>([]);
-
   useEffect(() => {
+    // Grab the sections and header element
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];
-    let currentIndex = 0;
+    const head_elem = document.querySelector('h2') as HTMLHeadElement;
+
+    let currentIndex = -1;
     let animating = false;
     const sectionLength = sectionElems.current.length - 1;
-    gsap.registerPlugin(Observer);
 
-    const tl = gsap.timeline({ defaults: { duration: 1.25, ease: "power1.inOut", } });
-    gsap.set(sectionElems.current, { display: "none" })
+    gsap.registerPlugin(Observer, SplitType);
 
-
-
-    function gotoSection(index: number, direction: number) {
-      // Ensure index is within bounds and not animating
-      if (index < 0 || index > sectionLength || animating) return;
-      console.log("running")
-
-      // Mark as animating to prevent further animations
-      animating = true;
-
-      // Set the new section as visible
-      gsap.set(sectionElems.current[currentIndex], { display: "", zIndex: "0" });
-
-      const notCurrentIndex = sectionElems.current.filter((item, i) => i !== index && item);
-
-      // Create the animation timeline
-      tl.fromTo(
-        sectionElems.current[index],
-        {
-          translateY: direction ? "-100%" : "100%",
-          zIndex: direction ? "1" : "0",
-        },
-        {
-          translateY: "0",
-          display: "",
-          zIndex: direction ? "1" : "0",
-          onComplete: () => {
-            // Mark as not animating once the animation completes
-            animating = false;
-          },
-        }
-      )
-        .set(notCurrentIndex, { display: "none", zIndex: "" })
-        .set(sectionElems.current[index], { zIndex: "0" });
-
-      // Update the current index
-      currentIndex = index;
-    }
-
-
-
-    Observer.create({
-      type: "wheel,touch,pointer",
-      wheelSpeed: -1,
-      onDown: () => !animating && gotoSection(currentIndex - 1, 1),
-      onUp: () => !animating && gotoSection(currentIndex + 1, 0),
-      tolerance: 10,
-      preventDefault: true
+    // Initialize SplitType
+    const typeSplit = new SplitType(head_elem, {
+      type: "words,lines",
+      tag: "span",
+      wordsClass: "text-anime overflow-hidden",
+      linesClass: "text-anime overflow-hidden",
     });
 
-    gotoSection(0, 0)
+    // Initial setup for sections
+    gsap.set(sectionElems.current, { display: "none", position: "absolute", top: 0, left: 0, width: "100%" });
 
-    // gsap.set(sectionElems.current, { zIndex: 0, display: "none" })
+    // Timeline definition (avoid creating multiple timelines for performance)
+    const tl = gsap.timeline({ paused: true });
+    const tl2 = gsap.timeline();
 
 
-    // const goUp = (index: number) => {
-    //   if (currentIndex == 0 || index == 0) {
-    //     gsap.set(sectionElems.current[currentIndex], { zIndex: 1, })
-    //     gsap.set(sectionElems.current[index], { zIndex: 1, })
+    // Function to handle section transitions
+    function gotoSection(index: number, direction: number) {
+      if (index < 0 || index > sectionLength || animating) return;
+      animating = true;
 
+      // Set current and target sections
+      const currentSection = sectionElems.current[currentIndex];
+      const targetSection = sectionElems.current[index];
+
+      // Set initial state for the target section based on direction
+      gsap.set(targetSection, { display: "", y: direction ? "100%" : "-100%", zIndex: 1 });
+
+      // Combine animations into one timeline for smoother performance
+      tl.clear()
+        .to(currentSection, { y: direction ? "-100%" : "100%", duration: 1.8, ease: "expo.inOut" }) // Animate out current section
+        .to(targetSection, { y: "0%", duration: 1.8, ease: "expo.inOut" }, "<") // Animate in target section
+        .from(typeSplit.words, { y: "100%", duration: 0.8, ease: "power2.out" }, "-=0.7") // Animate text in
+        .set(currentSection, { display: "none", zIndex: 0 }) // Hide the current section after transition
+        .call(() => { animating = false; }); // Reset animating flag
+
+      tl.play(); // Play the timeline
+
+      currentIndex = index; // Update the current index
+
+      tl2.fromTo(typeSplit.words, {
+        y: "0",
+
+      }, {
+        y: "-100%",
+        ease: "power2.in",
+        duration: 0.5
+      })
+    }
+
+    // Scroll-based section navigation using GSAP Observer
+    const observer = Observer.create({
+      type: "wheel,touch,pointer",
+      wheelSpeed: -1,
+      onDown: () => !animating && gotoSection(currentIndex - 1, 0), // Scroll down (previous section)
+      onUp: () => !animating && gotoSection(currentIndex + 1, 1),   // Scroll up (next section)
+      tolerance: 50,
+      preventDefault: true,
+    });
+
+    // Start at the first section
+    gotoSection(0, 1);
+
+    // Function for pagination
+    // function jumpToSection(index: number) {
+    //   if (!animating && index !== currentIndex && index >= 0 && index <= sectionLength) {
+    //     const direction = index > currentIndex ? 1 : 0; 
+    //     gotoSection(index, direction);
     //   }
-    //   if (index >= 0) {
-    //     gsap.set(sectionElems.current[index], { zIndex: 1, });
-
-    //     tl.fromTo(sectionElems.current[index], {
-    //       translateY: "100%"
-    //     }, {
-    //       translateY: 0,
-    //       onComplete: () => {
-    //         animating = false
-    //       }
-    //     }).set(sectionElems.current[currentIndex], { zIndex: 0, display: "none" })
-    //   }
-    //   currentIndex = index;
     // }
+    // Determine direction based on target section
 
-
-    // const goDown = (index: number) => {
-    //   if (index < 0) {
-    //     return
-    //   }
-    //   if (index == 0 || currentIndex == 0) {
-    //     gsap.set(sectionElems.current[currentIndex], { zIndex: 1, display: "block" })
-    //     gsap.set(sectionElems.current[index], { zIndex: 1, display: "block" })
-    //     console.log(`check first contdion ${currentIndex} and ${index}`)
-
-    //   }
-
-    //   if (currentIndex >= 0) {
-    //     console.log(`check second contdion ${currentIndex} and ${index}`)
-
-
-    //     gsap.set(sectionElems.current[index], { zIndex: 1, display: "block" });
-
-    //     tl.fromTo(sectionElems.current[index], {
-    //       translateY: "100%"
-    //     }, {
-    //       translateY: 0,
-    //       onComplete: () => {
-    //         animating = false
-    //       }
-    //     }).set(sectionElems.current[currentIndex], { zIndex: 0, })
-    //   }
-    //   currentIndex = index;
-
-    // }
-    // function gotoSection(index: number, direction: number) {
-    //   animating = true;
-
-    //   if (!direction) {
-    //     goUp(index)
-    //   }
-    //   else {
-    //     goDown(index)
-    //   }
-
-    // }
-
-
-
-
+    // Cleanup function
+    return () => {
+      typeSplit.revert(); // Restore the original text
+      observer.kill(); // Remove the Observer instance to prevent memory leaks
+    };
   }, []);
+
 
 
   return (
     <>
-      <section className='w-screen h-screen bg-red-300 absolute inset-0' ></section>
-      <section className='w-screen h-screen bg-green-400 absolute inset-0' ></section>
-      <section className='w-screen h-screen bg-purple-300 absolute inset-0'></section>
-      <section className='w-screen h-screen bg-slate-600 absolute inset-0' ></section>
+      <section className='w-screen h-screen bg-[#f1f1f1] absolute inset-0 ' >
+        <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
+          <img src={img1} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
+        </div>
+      </section>
+      <section className='w-screen h-screen bg-[#d7d7d7] absolute inset-0 flex justify-end' >
+        <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
+          <img src={img2} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
+        </div>
+      </section>
+      <section className='w-screen h-screen bg-[#46d0ff] absolute inset-0 flex justify-end'>
+        <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
+          <img src={img3} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
+        </div>
+      </section>
+      <section className='w-screen h-screen bg-[#000f55] absolute inset-0 flex justify-end' >
+        <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
+          <img src={img4} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
+        </div>
+      </section>
+
+      <div className='w-screen h-screen z-10 relative px-4 lg:px-20'>
+        <div className='flex flex-col justify-center w-full h-full lg:w-1/2'>
+          <h2 className=' text-3xl font-bold lg:text-6xl relative'>Lorem ipsum dolor sit,Lorem ipsum dolor sit,</h2>
+        </div>
+      </div>
     </>
   )
 }
