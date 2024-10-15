@@ -7,7 +7,7 @@ import { ComponentState } from "react";
 
 // Initialize SplitType
 
-export const splitingText = (head_elem: HTMLElement | null) => {
+export const splitingText = (head_elem: (HTMLElement | null)[]) => {
   const typeSplit = new SplitType(head_elem, {
     type: "words,lines",
     tag: "span",
@@ -59,8 +59,8 @@ export const textInAni = (
     },
     {
       y: "-100%",
-      ease: "power2.in",
-      duration: 0.7,
+      ease: "power2.out",
+      duration: 0.5,
       onComplete: () => {
         setHeading(homeDatas[index]);
       },
@@ -76,6 +76,7 @@ export const textoutAni = (typeSplit: InstanceType<typeof SplitType>) => {
       yPercent: 0,
       duration: 0.5,
       ease: "power2.out",
+      delay: 0.3,
     }
   );
 };

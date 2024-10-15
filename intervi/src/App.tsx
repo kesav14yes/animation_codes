@@ -59,7 +59,8 @@ function App() {
 
       // Set initial state for the target section based on direction
       gsap.set(targetSection, { display: "", y: direction ? "100%" : "-100%", zIndex: 1 });
-      const head_elem = contentHeading.current;
+      const head_elem = [contentHeading.current, document.getElementById("pageCount")];
+      console.log(head_elem)
       const split = splitingText(head_elem);
 
       // Combine animations into one timeline for smoother performance
@@ -173,7 +174,7 @@ function App() {
 
 
   useEffect(() => {
-    const head_elem = contentHeading.current;
+    const head_elem = [contentHeading.current, document.getElementById("pageCount")];
     const split = splitingText(head_elem);
     textoutAni(split);
 
@@ -232,6 +233,21 @@ function App() {
       </div>
 
       {/* conetnt start */}
+
+      {/* section indicator start  */}
+
+      <div className=' absolute z-[2] right-[10%] bottom-[10%]'>
+        <p className='text-black text-5xl overflow-hidden  shrink-0 '>
+          <span id='pageCount' className='overflow-hidden inline-block text-6xl'>{(homeDatas.indexOf(heading) + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
+          <span>/</span>
+          <span >{(homeDatas.length).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
+        </p>
+
+
+      </div>
+
+      {/* section indicator end  */}
+
 
     </>
   )
