@@ -7,6 +7,8 @@ import img2 from "./assets/img_02.webp";
 import img3 from "./assets/IMG_03.webp";
 import img4 from "./assets/img_04.webp";
 import SplitType from "./_gsap/assets/SplitText"
+import { homeDatas } from './data/home.data';
+import { textInAni, textoutAni, splitingText } from './helpers/home.func';
 
 function App() {
 
@@ -14,79 +16,68 @@ function App() {
   const contentHeading = useRef<HTMLHeadingElement | null>(null);
 
   const [loading, setLoading] = useState(true)
+  const [heading, setHeading] = useState(homeDatas[0])
+
+
 
   useEffect(() => {
+
+    gsap.registerPlugin(Observer, SplitType);
+
     // Grab the sections and header element
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];
-    const head_elem = contentHeading.current;
 
     let currentIndex = -1;
     let animating = false;
     const sectionLength = sectionElems.current.length - 1;
 
-    gsap.registerPlugin(Observer, SplitType);
 
-    // Initialize SplitType
-    const typeSplit = new SplitType(head_elem, {
-      type: "words,lines",
-      tag: "span",
-      wordsClass: "text-anime overflow-hidden",
-      linesClass: "text-anime overflow-hidden",
-    });
 
     // Initial setup for sections
     gsap.set(sectionElems.current, { display: "none", position: "absolute", top: 0, left: 0, width: "100%" });
 
-    // Timeline definition (avoid creating multiple timelines for performance)
+
     const tl = gsap.timeline({ paused: true });
-    // const tl2 = gsap.timeline();
+
 
 
     // Function to handle section transitions
     function gotoSection(index: number, direction: number) {
       if (index < 0 || index > sectionLength || animating) return;
-      animating = true;
 
       // Set current and target sections
       const currentSection = sectionElems.current[currentIndex];
       const targetSection = sectionElems.current[index];
 
+      if (currentIndex === -1) {
+        gsap.set(sectionElems.current[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
+        currentIndex = index; // Update the current index
+        animating = false; // Allow future transitions
+        return; // Exit the function
+      }
+
       // Set initial state for the target section based on direction
       gsap.set(targetSection, { display: "", y: direction ? "100%" : "-100%", zIndex: 1 });
+      const head_elem = contentHeading.current;
+      const split = splitingText(head_elem);
 
       // Combine animations into one timeline for smoother performance
       tl.clear()
-        .to(currentSection, { y: direction ? "-100%" : "100%", duration: 1.8, ease: "expo.inOut" }) // Animate out current section
-        .to(targetSection, { y: "0%", duration: 1.8, ease: "expo.inOut" }, "<") // Animate in target section
-        .from(typeSplit.words, { y: "100%", duration: 0.8, ease: "power2.out" }, "-=0.7") // Animate text in
-        .set(currentSection, { display: "none", zIndex: 0 }) // Hide the current section after transition
+
+        .to(currentSection, { y: direction ? "-100%" : "100%", duration: 1.5, ease: "expo.inOut", onStart: () => textInAni(split, setHeading, index, homeDatas) }, "<") // Animate out current section
+        .to(targetSection, { y: "0%", duration: 1.5, ease: "expo.inOut" }, "<") // Animate in target section
+        .set(currentSection, { display: "none", zIndex: 0, }) // Hide the current section after transition
         .call(() => { animating = false; }); // Reset animating flag
 
       tl.play(); // Play the timeline
 
       currentIndex = index; // Update the current index
 
-      gsap.fromTo(typeSplit.words, {
-        y: "0",
 
-      }, {
-        y: "-100%",
-        ease: "power2.in",
-        duration: 0.5
-      })
     }
 
-    // Scroll-based section navigation using GSAP Observer
-    const observer = Observer.create({
-      type: "wheel,touch,pointer",
-      wheelSpeed: -1,
-      onDown: () => !animating && gotoSection(currentIndex - 1, 0), // Scroll down (previous section)
-      onUp: () => !animating && gotoSection(currentIndex + 1, 1),   // Scroll up (next section)
-      tolerance: 50,
-      preventDefault: true,
-    });
 
-    observer.disable();
+    // observer.disable();
     // Start at the first section
     gotoSection(0, 1);
 
@@ -139,14 +130,11 @@ function App() {
           duration: 1.8,
           ease: "expo.inOut",
           onComplete: () => {
-            observer.enable();
+            // observer.enable();
+            // gotoSection(0, 1);
             setLoading(false)
           }
         })
-
-
-
-
 
     }
 
@@ -163,14 +151,32 @@ function App() {
     // }
     // Determine direction based on target section
 
+
+
+    // Scroll-based section navigation using GSAP Observer
+    const observer = Observer.create({
+      type: "wheel,touch,pointer",
+      wheelSpeed: -1,
+      onDown: () => !animating && gotoSection(currentIndex - 1, 0), // Scroll down (previous section)
+      onUp: () => !animating && gotoSection(currentIndex + 1, 1),   // Scroll up (next section)
+      tolerance: 70,
+      preventDefault: true,
+    });
+
     // Cleanup function
     return () => {
-      typeSplit.revert(); // Restore the original text
+      // Restore the original text
       observer.kill(); // Remove the Observer instance to prevent memory leaks
     };
   }, []);
 
 
+  useEffect(() => {
+    const head_elem = contentHeading.current;
+    const split = splitingText(head_elem);
+    textoutAni(split);
+
+  }, [heading])
 
   return (
     <>
@@ -220,7 +226,7 @@ function App() {
 
       <div className='w-screen h-screen z-10 relative px-4 lg:px-20 max-lg:py-20'>
         <div className='flex flex-col justify-center w-full h-full lg:w-1/2 max-lg:justify-start'>
-          <h2 className=' text-3xl font-bold lg:text-7xl relative' ref={contentHeading}>Lorem ipsum dolor sit,Lorem ipsum dolor sit,</h2>
+          <h2 id='heading' className=' text-3xl font-bold lg:text-7xl relative' ref={contentHeading}>{heading.cont}</h2>
         </div>
       </div>
 
