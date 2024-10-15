@@ -44,6 +44,7 @@ function App() {
     // Function to handle section transitions
     function gotoSection(index: number, direction: number) {
       if (index < 0 || index > sectionLength || animating) return;
+      animating = true;
 
       // Set current and target sections
       const currentSection = sectionElems.current[currentIndex];

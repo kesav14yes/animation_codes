@@ -60,7 +60,7 @@ export const textInAni = (
     {
       y: "-100%",
       ease: "power2.in",
-      duration: 0.5,
+      duration: 0.7,
       onComplete: () => {
         setHeading(homeDatas[index]);
       },
