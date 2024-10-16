@@ -80,11 +80,3 @@ export const textoutAni = (typeSplit: InstanceType<typeof SplitType>) => {
     }
   );
 };
-
-// Function for pagination
-// function jumpToSection(index: number) {
-//   if (!animating && index !== currentIndex && index >= 0 && index <= sectionLength) {
-//     const direction = index > currentIndex ? 1 : 0;
-//     gotoSection(index, direction);
-//   }
-// }

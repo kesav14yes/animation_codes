@@ -27,6 +27,10 @@ function App() {
     // Grab the sections and header element
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];
 
+    const paginations = document.querySelectorAll("[data-inicator]");
+
+    paginations.forEach(item => console.log(item.getBoundingClientRect().left))
+
     let currentIndex = -1;
     let animating = false;
     const sectionLength = sectionElems.current.length - 1;
@@ -60,7 +64,6 @@ function App() {
       // Set initial state for the target section based on direction
       gsap.set(targetSection, { display: "", y: direction ? "100%" : "-100%", zIndex: 1 });
       const head_elem = [contentHeading.current, document.getElementById("pageCount")];
-      console.log(head_elem)
       const split = splitingText(head_elem);
 
       // Combine animations into one timeline for smoother performance
@@ -147,7 +150,7 @@ function App() {
     // Function for pagination
     // function jumpToSection(index: number) {
     //   if (!animating && index !== currentIndex && index >= 0 && index <= sectionLength) {
-    //     const direction = index > currentIndex ? 1 : 0; 
+    //     const direction = index > currentIndex ? 1 : 0;
     //     gotoSection(index, direction);
     //   }
     // }
@@ -228,7 +231,7 @@ function App() {
 
       <div className='w-screen h-screen z-10 relative px-4 lg:px-20 max-lg:py-20'>
         <div className='flex flex-col justify-center w-full h-full lg:w-1/2 max-lg:justify-start'>
-          <h2 id='heading' className=' text-3xl font-bold lg:text-7xl relative' ref={contentHeading}>{heading.cont}</h2>
+          <h2 id='heading' className=' text-3xl font-bold lg:text-7xl relative text-white' ref={contentHeading}>{heading.cont}</h2>
         </div>
       </div>
 
@@ -237,7 +240,7 @@ function App() {
       {/* section indicator start  */}
 
       <div className=' absolute z-[2] right-[10%] bottom-[10%]'>
-        <p className='text-black text-5xl overflow-hidden  shrink-0 '>
+        <p className='text-white text-5xl overflow-hidden  shrink-0 '>
           <span id='pageCount' className='overflow-hidden inline-block text-6xl'>{(homeDatas.indexOf(heading) + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
           <span>/</span>
           <span >{(homeDatas.length).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
@@ -248,6 +251,23 @@ function App() {
 
       {/* section indicator end  */}
 
+
+      {/* section pagination start  */}
+
+      <div className='absolute left-[10%] bottom-[10%] z-10 '>
+
+        <div className='relative flex w-full'>
+          {
+            homeDatas.map((_, i) => (
+              <span data-inicator key={i} className={`relative  w-1.5 h-1.5 rounded-full bg-white mx-2 cursor-pointer`} />
+            ))
+          }
+          <span className='w-1.5 h-1.5 rounded-full bg-red-700 mx-2 cursor-pointer absolute left-0'></span>
+        </div>
+
+      </div>
+
+      {/* section pagination start  */}
 
     </>
   )
