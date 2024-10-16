@@ -8,7 +8,9 @@ import img3 from "./assets/IMG_03.webp";
 import img4 from "./assets/img_04.webp";
 import SplitType from "./_gsap/assets/SplitText"
 import { homeDatas } from './data/home.data';
-import { textInAni, textoutAni, splitingText } from './helpers/home.func';
+import { textoutAni, splitingText, goToSection, couterAnimation, goDown, goUp } from './helpers/home.func';
+
+
 
 function App() {
 
@@ -20,153 +22,49 @@ function App() {
 
 
 
+
   useEffect(() => {
+    // const paginations = document.querySelectorAll("[data-inicator]");
+    // paginations.forEach(item => console.log(item.getBoundingClientRect().left))
+
 
     gsap.registerPlugin(Observer, SplitType);
+    sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];   // Grab the sections and header element
 
-    // Grab the sections and header element
-    sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];
-
-    const paginations = document.querySelectorAll("[data-inicator]");
-
-    paginations.forEach(item => console.log(item.getBoundingClientRect().left))
-
-    let currentIndex = -1;
-    let animating = false;
-    const sectionLength = sectionElems.current.length - 1;
+    const counterElem = document.querySelector("#progressHeading span") as HTMLElement;
+    const overlayElem = document.getElementById("loadOverlay") as HTMLElement
+    const textAnimationElem = document.querySelectorAll('[data-textanimation]');
 
 
+    if (!contentHeading.current || !textAnimationElem) return
+    const textElem = [contentHeading.current, ...Array.from(textAnimationElem).map((elem) => elem as HTMLElement)]
+
+
+    if (!textElem || !counterElem || !overlayElem) {
+      return console.log(`text elemnt is null ${textElem} || counterElem is null ${counterElem} || overlayelem is null ${overlayElem}`)
+    }
 
     // Initial setup for sections
     gsap.set(sectionElems.current, { display: "none", position: "absolute", top: 0, left: 0, width: "100%" });
 
-
-    const tl = gsap.timeline({ paused: true });
-
-
-
-    // Function to handle section transitions
-    function gotoSection(index: number, direction: number) {
-      if (index < 0 || index > sectionLength || animating) return;
-      animating = true;
-
-      // Set current and target sections
-      const currentSection = sectionElems.current[currentIndex];
-      const targetSection = sectionElems.current[index];
-
-      if (currentIndex === -1) {
-        gsap.set(sectionElems.current[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
-        currentIndex = index; // Update the current index
-        animating = false; // Allow future transitions
-        return; // Exit the function
-      }
-
-      // Set initial state for the target section based on direction
-      gsap.set(targetSection, { display: "", y: direction ? "100%" : "-100%", zIndex: 1 });
-      const head_elem = [contentHeading.current, document.getElementById("pageCount")];
-      const split = splitingText(head_elem);
-
-      // Combine animations into one timeline for smoother performance
-      tl.clear()
-
-        .to(currentSection, { y: direction ? "-100%" : "100%", duration: 1.5, ease: "expo.inOut", onStart: () => textInAni(split, setHeading, index, homeDatas) }, "<") // Animate out current section
-        .to(targetSection, { y: "0%", duration: 1.5, ease: "expo.inOut" }, "<") // Animate in target section
-        .set(currentSection, { display: "none", zIndex: 0, }) // Hide the current section after transition
-        .call(() => { animating = false; }); // Reset animating flag
-
-      tl.play(); // Play the timeline
-
-      currentIndex = index; // Update the current index
-
+    const runGotoSection = (index: number, direction: number) => {
+      goToSection(index, direction, sectionElems.current, textElem, setHeading,)
 
     }
 
-
-    // observer.disable();
-    // Start at the first section
-    gotoSection(0, 1);
-
-    function couterAnimation() {
-      const counterElem = document.querySelector("#progressHeading span");
-      if (!counterElem) return
-      const loadTimeline = gsap.timeline();
-
-      loadTimeline.to(counterElem, {
-        textContent: 100,
-        duration: 6,
-        ease: " Power1.easeIn",
-        snap: { textContent: 3 },
-        onUpdate: function () {
-          // Update the text with the current value + %
-          counterElem.textContent = counterElem.textContent + "%";
-        },
-
-      }).to("#loadOverlay", {
-        y: 0,
-        duration: 6,
-        ease: " Power1.easeIn",
-      }, "<")
-        .to(counterElem, {
-          yPercent: -100,
-          ease: "power2.in",
-          onComplete: () => {
-            counterElem.textContent = "Hello."
-            counterElem.setAttribute("style", "opacity:0")
-          }
-        })
-        .to(counterElem, {
-          yPercent: 100,
-          ease: "power2.in",
-          onComplete: () => {
-            counterElem.setAttribute("style", "opacity:1;transform: translateY(100%);")
-          }
-        },).to(
-          counterElem, {
-          yPercent: 0,
-          ease: "power2.in",
-        }
-        ).to(
-          counterElem, {
-          yPercent: -100,
-          ease: "power2.in",
-        }, "+=0.5"
-        ).to("#loading", {
-          yPercent: -100,
-          duration: 1.8,
-          ease: "expo.inOut",
-          onComplete: () => {
-            // observer.enable();
-            // gotoSection(0, 1);
-            setLoading(false)
-          }
-        })
-
-    }
-
-    couterAnimation();
-
-
-
-    // Function for pagination
-    // function jumpToSection(index: number) {
-    //   if (!animating && index !== currentIndex && index >= 0 && index <= sectionLength) {
-    //     const direction = index > currentIndex ? 1 : 0;
-    //     gotoSection(index, direction);
-    //   }
-    // }
-    // Determine direction based on target section
-
-
+    couterAnimation(counterElem, overlayElem, setLoading);
+    runGotoSection(0, 1)
 
     // Scroll-based section navigation using GSAP Observer
     const observer = Observer.create({
       type: "wheel,touch,pointer",
       wheelSpeed: -1,
-      onDown: () => !animating && gotoSection(currentIndex - 1, 0), // Scroll down (previous section)
-      onUp: () => !animating && gotoSection(currentIndex + 1, 1),   // Scroll up (next section)
+      onDown: () => goDown(runGotoSection), // Scroll down (previous section)
+      onUp: () => goUp(runGotoSection),   // Scroll up (next section)
       tolerance: 70,
       preventDefault: true,
     });
+
 
     // Cleanup function
     return () => {
@@ -177,7 +75,9 @@ function App() {
 
 
   useEffect(() => {
-    const head_elem = [contentHeading.current, document.getElementById("pageCount")];
+    const textAnimationElem = document.querySelectorAll('[data-textanimation]');
+    if (!contentHeading.current || !textAnimationElem) return
+    const head_elem = [contentHeading.current, ...Array.from(textAnimationElem).map((elem) => elem as HTMLElement)]
     const split = splitingText(head_elem);
     textoutAni(split);
 
@@ -241,7 +141,7 @@ function App() {
 
       <div className=' absolute z-[2] right-[10%] bottom-[10%]'>
         <p className='text-white text-5xl overflow-hidden  shrink-0 '>
-          <span id='pageCount' className='overflow-hidden inline-block text-6xl'>{(homeDatas.indexOf(heading) + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
+          <span data-textanimation className='overflow-hidden inline-block text-6xl'>{(homeDatas.indexOf(heading) + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
           <span>/</span>
           <span >{(homeDatas.length).toLocaleString('en-US', { minimumIntegerDigits: 2 })}</span>
         </p>

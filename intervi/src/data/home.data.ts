@@ -1,4 +1,9 @@
-export const homeDatas = [
+export interface HomeData {
+  id: string;
+  cont: string;
+}
+
+export const homeDatas: HomeData[] = [
   {
     id: "content01",
     cont: "Lorem ipsum dolor sit,Lorem 01",
