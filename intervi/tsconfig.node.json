@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023", "DOM"],
+    "lib": ["ES2023", "DOM", "ES6"],
     "module": "ESNext",
     "jsx": "react-jsx", // Add this line to enable JSX
     "skipLibCheck": true,

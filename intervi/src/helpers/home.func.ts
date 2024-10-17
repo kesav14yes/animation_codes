@@ -3,13 +3,6 @@ import SplitType from "../_gsap/assets/SplitText";
 import { ComponentState } from "react";
 import { HomeData, homeDatas } from "../data/home.data";
 
-// Function for pagination
-// function jumpToSection(index: number) {
-//   if (!animating && index !== currentIndex && index >= 0 && index <= sectionLength) {
-//     const direction = index > currentIndex ? 1 : 0;
-//     gotoSection(index, direction);
-//   }
-// }
 // Determine direction based on target section
 
 // variables
@@ -95,12 +88,21 @@ export const textoutAni = (typeSplit: InstanceType<typeof SplitType>) => {
   );
 };
 
+const movePagination = (paginationElem: HTMLElement, position: number) => {
+  gsap.to(paginationElem, {
+    left: position,
+    ease: "power1.inOut",
+  });
+};
+
 export const goToSection = (
   index: number,
   direction: number,
   sectionElem: HTMLElement[],
   textElem: HTMLElement[],
-  setHeading: ComponentState
+  setHeading: ComponentState,
+  paginations: HTMLElement[],
+  activePaginationELem: HTMLElement
 ) => {
   const sectionLength = sectionElem.length - 1;
   if (index < 0 || index > sectionLength || animating) return;
@@ -109,11 +111,27 @@ export const goToSection = (
   const currentSection = sectionElem[currentIndex];
   const targetSection = sectionElem[index];
 
+  //pagination start
+  const currentPagination = paginations[index];
+  const currentPaginationRec = currentPagination.getClientRects().item(0)?.left;
+  const basePositionrec = paginations[0].getClientRects().item(0)?.left;
+
+  if (!currentPaginationRec || !basePositionrec) {
+    return console.log(
+      `currentPaginationRec position is null ${currentPaginationRec} || basePositionrec posion is null ${basePositionrec}`
+    );
+  }
+
+  const leftForPAgination = currentPaginationRec - basePositionrec;
+
+  movePagination(activePaginationELem, leftForPAgination);
+
+  //pagination end
+
   if (currentIndex == -1) {
     gsap.set(sectionElem[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
     currentIndex = index; // Update the current index
     animating = false; // Allow future transitions
-    console.log(`running inside ${animating} ${currentIndex}`);
     return; // Exit the function
   }
   // Set initial state for the target section based on direction
@@ -147,7 +165,6 @@ export const goToSection = (
   tl.play(); // Play the timeline
 
   currentIndex = index; // Update the current index
-  console.log(`running outside ${animating} ${currentIndex}`);
 };
 
 export const couterAnimation = (
@@ -228,5 +245,16 @@ export const goDown = (
 export const goUp = (callback: (index: number, direction: number) => void) => {
   if (!animating) {
     callback(currentIndex + 1, 1);
+  }
+};
+
+// Function for pagination
+export const jumpToSection = (
+  index: number,
+  callback: (index: number, direction: number) => void
+) => {
+  if (!animating && index !== currentIndex && index >= 0) {
+    const direction = index > currentIndex ? 1 : 0;
+    callback(index, direction);
   }
 };

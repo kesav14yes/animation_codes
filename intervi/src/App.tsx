@@ -8,7 +8,7 @@ import img3 from "./assets/IMG_03.webp";
 import img4 from "./assets/img_04.webp";
 import SplitType from "./_gsap/assets/SplitText"
 import { homeDatas } from './data/home.data';
-import { textoutAni, splitingText, goToSection, couterAnimation, goDown, goUp } from './helpers/home.func';
+import { textoutAni, splitingText, goToSection, couterAnimation, goDown, goUp, jumpToSection } from './helpers/home.func';
 
 
 
@@ -24,8 +24,6 @@ function App() {
 
 
   useEffect(() => {
-    // const paginations = document.querySelectorAll("[data-inicator]");
-    // paginations.forEach(item => console.log(item.getBoundingClientRect().left))
 
     gsap.registerPlugin(Observer, SplitType);
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];   // Grab the sections and header element
@@ -33,6 +31,8 @@ function App() {
     const counterElem = document.querySelector("#progressHeading span") as HTMLElement;
     const overlayElem = document.getElementById("loadOverlay") as HTMLElement
     const textAnimationElem = document.querySelectorAll('[data-textanimation]');
+    const paginations = Array.from(document.querySelectorAll("[data-inicator]")) as HTMLElement[];
+    const activePaginationELem = document.getElementById("activePagination") as HTMLElement
 
 
     if (!contentHeading.current || !textAnimationElem) return
@@ -47,11 +47,12 @@ function App() {
     gsap.set(sectionElems.current, { display: "none", position: "absolute", top: 0, left: 0, width: "100%" });
 
     const runGotoSection = (index: number, direction: number) => {
-      goToSection(index, direction, sectionElems.current, textElem, setHeading,)
+      goToSection(index, direction, sectionElems.current, textElem, setHeading, paginations, activePaginationELem)
 
     }
 
     couterAnimation(counterElem, overlayElem, setLoading);
+    runGotoSection(0, 1)
 
 
     // Scroll-based section navigation using GSAP Observer
@@ -63,6 +64,14 @@ function App() {
       tolerance: 70,
       preventDefault: true,
     });
+
+
+    paginations.forEach((pagination, i) => {
+      pagination.addEventListener("click", () => {
+        jumpToSection(i, runGotoSection)
+        // console.log("running")
+      })
+    })
 
     // Cleanup function
     return () => {
@@ -160,7 +169,7 @@ function App() {
               <span data-inicator key={i} className={`relative  w-1.5 h-1.5 rounded-full bg-white mx-2 cursor-pointer`} />
             ))
           }
-          <span className='w-1.5 h-1.5 rounded-full bg-red-700 mx-2 cursor-pointer absolute left-0'></span>
+          <span id='activePagination' className='w-1.5 h-1.5 rounded-full bg-red-700 mx-2 cursor-pointer absolute left-0'></span>
         </div>
 
       </div>
