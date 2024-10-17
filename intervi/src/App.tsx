@@ -32,7 +32,7 @@ function App() {
     const overlayElem = document.getElementById("loadOverlay") as HTMLElement
     const textAnimationElem = document.querySelectorAll('[data-textanimation]');
     const paginations = Array.from(document.querySelectorAll("[data-inicator]")) as HTMLElement[];
-    const activePaginationELem = document.getElementById("activePagination") as HTMLElement
+    const activePaginationELem = document.getElementById("activePagination") as HTMLElement;
 
 
     if (!contentHeading.current || !textAnimationElem) return
@@ -110,7 +110,7 @@ function App() {
 
       {/* section start */}
 
-      <section className='w-screen h-screen bg-[#f1f1f1] absolute inset-0 ' >
+      <section className='w-screen h-screen bg-[#d7d7d7] absolute inset-0 ' >
         <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
           <img src={img1} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
         </div>
@@ -138,7 +138,7 @@ function App() {
 
       <div className='w-screen h-screen z-10 relative px-4 lg:px-20 max-lg:py-20'>
         <div className='flex flex-col justify-center w-full h-full lg:w-1/2 max-lg:justify-start'>
-          <h2 id='heading' className=' text-3xl font-bold lg:text-7xl relative text-white' ref={contentHeading}>{heading.cont}</h2>
+          <h2 id='heading' className=' text-3xl font-bold lg:text-7xl relative text-white' ref={contentHeading} dangerouslySetInnerHTML={{ __html: heading.cont }}></h2>
         </div>
       </div>
 

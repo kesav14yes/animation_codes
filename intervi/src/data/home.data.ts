@@ -10,7 +10,7 @@ export const homeDatas: HomeData[] = [
   },
   {
     id: "content02",
-    cont: "Lorem ipsum dolor sit,Lorem Lorem ipsum dolor sit,Lorem 02",
+    cont: "Lorem ipsum dolor sit,Lorem Lorem ipsum dolor sit,Lorem 02 <span class='text-green-400'>.</span>",
   },
   {
     id: "content03",

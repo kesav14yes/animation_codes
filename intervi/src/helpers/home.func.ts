@@ -91,7 +91,8 @@ export const textoutAni = (typeSplit: InstanceType<typeof SplitType>) => {
 const movePagination = (paginationElem: HTMLElement, position: number) => {
   gsap.to(paginationElem, {
     left: position,
-    ease: "power1.inOut",
+    ease: "expo.inOut",
+    duration: 1.5,
   });
 };
 
@@ -125,6 +126,8 @@ export const goToSection = (
   const leftForPAgination = currentPaginationRec - basePositionrec;
 
   movePagination(activePaginationELem, leftForPAgination);
+  //img element for parralex
+  const imgElem = sectionElem[index].querySelector("img") as HTMLImageElement;
 
   //pagination end
 
@@ -132,8 +135,15 @@ export const goToSection = (
     gsap.set(sectionElem[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
     currentIndex = index; // Update the current index
     animating = false; // Allow future transitions
+    document.addEventListener("mousemove", (e) => {
+      parallaxIt(e, imgElem, -30, sectionElem[index]);
+    });
     return; // Exit the function
   }
+
+  document.addEventListener("mousemove", (e) => {
+    parallaxIt(e, imgElem, -30, sectionElem[currentIndex]);
+  });
   // Set initial state for the target section based on direction
   gsap.set(targetSection, {
     display: "",
@@ -258,3 +268,25 @@ export const jumpToSection = (
     callback(index, direction);
   }
 };
+
+// parallaxIt effect
+export function parallaxIt(
+  e: MouseEvent,
+  target: HTMLElement,
+  movement: number,
+  container: HTMLElement
+) {
+  // Get the container's position and dimensions
+  const relX = e.pageX - container.offsetLeft;
+  const relY = e.pageY - container.offsetTop;
+
+  const containerWidth = container.offsetWidth;
+  const containerHeight = container.offsetHeight;
+
+  // Use GSAP to apply the parallax effect
+  gsap.to(target, {
+    duration: 1,
+    x: ((relX - containerWidth / 2) / containerWidth) * movement,
+    y: ((relY - containerHeight / 2) / containerHeight) * movement,
+  });
+}
