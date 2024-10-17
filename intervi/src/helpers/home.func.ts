@@ -16,7 +16,9 @@ import { HomeData, homeDatas } from "../data/home.data";
 let currentIndex = -1;
 let animating = false;
 
+// Initialize timeline for goToSection
 const tl = gsap.timeline({ paused: true });
+
 // Initialize SplitType
 
 export const splitingText = (head_elem: HTMLElement[]) => {
@@ -107,14 +109,13 @@ export const goToSection = (
   const currentSection = sectionElem[currentIndex];
   const targetSection = sectionElem[index];
 
-  if (currentIndex === -1) {
-    console.log("true");
+  if (currentIndex == -1) {
     gsap.set(sectionElem[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
     currentIndex = index; // Update the current index
     animating = false; // Allow future transitions
+    console.log(`running inside ${animating} ${currentIndex}`);
     return; // Exit the function
   }
-
   // Set initial state for the target section based on direction
   gsap.set(targetSection, {
     display: "",
@@ -146,6 +147,7 @@ export const goToSection = (
   tl.play(); // Play the timeline
 
   currentIndex = index; // Update the current index
+  console.log(`running outside ${animating} ${currentIndex}`);
 };
 
 export const couterAnimation = (

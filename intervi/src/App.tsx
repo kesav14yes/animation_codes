@@ -27,7 +27,6 @@ function App() {
     // const paginations = document.querySelectorAll("[data-inicator]");
     // paginations.forEach(item => console.log(item.getBoundingClientRect().left))
 
-
     gsap.registerPlugin(Observer, SplitType);
     sectionElems.current = Array.from(document.querySelectorAll('section')) as HTMLElement[];   // Grab the sections and header element
 
@@ -53,7 +52,7 @@ function App() {
     }
 
     couterAnimation(counterElem, overlayElem, setLoading);
-    runGotoSection(0, 1)
+
 
     // Scroll-based section navigation using GSAP Observer
     const observer = Observer.create({
@@ -64,7 +63,6 @@ function App() {
       tolerance: 70,
       preventDefault: true,
     });
-
 
     // Cleanup function
     return () => {
