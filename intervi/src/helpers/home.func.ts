@@ -126,21 +126,17 @@ export const goToSection = (
   const leftForPAgination = currentPaginationRec - basePositionrec;
 
   movePagination(activePaginationELem, leftForPAgination);
+  //pagination end
+
   //img element for parralex
   const imgElem = sectionElem[index].querySelector("img") as HTMLImageElement;
-
-  //pagination end
 
   if (currentIndex == -1) {
     gsap.set(sectionElem[index], { display: "", y: "0%", zIndex: 1 }); // Show the first section without animation
     currentIndex = index; // Update the current index
     animating = false; // Allow future transitions
-    document.addEventListener("mousemove", (e) => {
-      parallaxIt(e, imgElem, -30, sectionElem[index]);
-    });
     return; // Exit the function
   }
-
   document.addEventListener("mousemove", (e) => {
     parallaxIt(e, imgElem, -30, sectionElem[currentIndex]);
   });

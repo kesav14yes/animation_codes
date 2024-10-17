@@ -110,7 +110,7 @@ function App() {
 
       {/* section start */}
 
-      <section className='w-screen h-screen bg-[#d7d7d7] absolute inset-0 ' >
+      <section className='w-screen h-screen bg-orange-500 absolute inset-0 ' >
         <div className='flex justify-end w-full h-full max-md:items-end  max-md:justify-center'>
           <img src={img1} alt="" className='max-w-full max-h-full  aspect-square max-md:h-1/2' />
         </div>
