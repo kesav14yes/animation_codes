@@ -18,7 +18,7 @@ export const splitingText = (head_elem: HTMLElement[]) => {
   const typeSplit = new SplitType(head_elem, {
     type: "words,lines",
     tag: "span",
-    wordsClass: "text-anime overflow-hidden",
+    wordClass: "text-anime overflow-hidden",
     linesClass: "text-anime overflow-hidden",
   });
 
@@ -138,7 +138,7 @@ export const goToSection = (
     return; // Exit the function
   }
   document.addEventListener("mousemove", (e) => {
-    parallaxIt(e, imgElem, -30, sectionElem[currentIndex]);
+    parallaxIt(e, imgElem, -20, sectionElem[currentIndex]);
   });
   // Set initial state for the target section based on direction
   gsap.set(targetSection, {
