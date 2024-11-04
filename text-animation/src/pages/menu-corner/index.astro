@@ -161,7 +161,7 @@ import Layout from "@/layouts/Layout.astro";
       const overlayElem = document.getElementById("nav-overlay") as HTMLElement;
 
       let window_height = window.innerHeight;
-      let window_width = window.innerHeight;
+      let window_width = window.innerWidth;
 
       if (!navelem || !overlayElem) {
         console.log(
@@ -169,18 +169,17 @@ import Layout from "@/layouts/Layout.astro";
         );
         return;
       }
-
-      navelem.style.height = window_height.toString();
-
+      navelem.style.height = `${window_height}px`;
       let radius = Math.sqrt(
         Math.pow(window_height, 2) + Math.pow(window_width, 2)
       );
+
       let diameter = radius * 2;
 
-      overlayElem.style.height = diameter.toString();
-      overlayElem.style.width = diameter.toString();
-      overlayElem.style.marginTop = `-${radius}`;
-      overlayElem.style.marginLeft = `-${radius}`;
+      overlayElem.style.height = `${diameter}px`;
+      overlayElem.style.width = `${diameter}px`;
+      overlayElem.style.marginTop = `-${radius}px`;
+      overlayElem.style.marginLeft = `-${radius}px`;
       overlayElem.setAttribute("data-view", `-${radius}`);
     };
 
