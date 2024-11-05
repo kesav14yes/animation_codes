@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+interface Props extends HTMLAttributes<any> {
+  className?: string;
+  tag?: "ul" | "ol";
+  isNested?: boolean;
+}
+
+const {
+  className = "",
+  isNested = false,
+  tag: Tagname = "ul",
+  ...rest
+} = Astro.props;
+
+const heading = tv({
+  base: ["group/list"],
+  variants: {},
+  defaultVariants: {
+    Tagname: Tagname,
+  },
+});
+---
+
+<Tagname
+  class={heading({ class: className })}
+  data-type={isNested ? "nested" : undefined}
+  {...rest}
+>
+  <slot />
+</Tagname>

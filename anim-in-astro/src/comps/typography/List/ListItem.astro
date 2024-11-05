@@ -1,0 +1,24 @@
+---
+import { tv } from "tailwind-variants";
+
+interface Props {
+  className?: string;
+}
+
+const { className = "" } = Astro.props;
+
+const listItem = tv({
+  base: [
+    "relative pl-4 [&:not(:first-child)]:mt-4",
+    "before:content-empty before:absolute before:top-2 before:left-0",
+    "before:w-1.5 before:h-1.5 before:rounded-full before:bg-primary-500",
+    "group-data-[type='nested']/list:before:bg-transparent",
+    "group-data-[type='nested']/list:before:border",
+    "group-data-[type='nested']/list:before:border-primary-500",
+  ],
+});
+---
+
+<li class={listItem({ class: className })}>
+  <slot />
+</li>

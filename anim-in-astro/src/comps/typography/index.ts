@@ -1,0 +1,12 @@
+export { default as H1 } from "./H1/H1.astro";
+export { default as H2 } from "./H2/H2.astro";
+export { default as H3 } from "./H3/H3.astro";
+export { default as H4 } from "./H4/H4.astro";
+export { default as Parah } from "./Parah/Parah.astro";
+export { default as Blockquote } from "./Blockquote/Blockquote.astro";
+export { default as Lead } from "./Lead/Lead.astro";
+export { default as Large } from "./Large/Large.astro";
+export { default as Small } from "./Small/Small.astro";
+export { default as Subtle } from "./Subtle/Subtle.astro";
+export { default as List } from "./List/List.astro";
+export { default as ListItem } from "./List/ListItem.astro";

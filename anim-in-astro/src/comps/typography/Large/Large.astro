@@ -1,0 +1,19 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+interface Props extends HTMLAttributes<any> {
+    className?: string;
+    tag?: "a" | "span" | "p";
+}
+
+const { className = "", tag: Tagname = "p", ...rest } = Astro.props;
+
+const large = tv({
+    base: ["font-OpenSans", "font-400 text-16 leading-140"],
+});
+---
+
+<Tagname class={large({ class: className })} {...rest}>
+    <slot />
+</Tagname>
