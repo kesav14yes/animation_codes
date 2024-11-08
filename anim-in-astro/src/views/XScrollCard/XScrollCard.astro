@@ -1,0 +1,237 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import img1 from "./_assets/blog_1.jpg";
+---
+
+<Layout title="x axis scroll card">
+  <nav
+    class="absolute top-0 w-screen p-[1em] flex justify-between items-center"
+  >
+    <div class="logo flex-1"></div>
+    <div class="nav-items flex-1 flex justify-center gap-2">
+      <a href="#" class="text-24">catalog</a>
+      <a href="#" class="text-24">cart</a>
+    </div>
+  </nav>
+  <section class="hero"></section>
+  <section
+    id="sticky"
+    class="relative bg-secondary-300 w-[250vw] h-full flex justify-center items-center will-change-transform"
+  >
+    <div class="sticky-header absolute top-0 left-0">
+      <h1
+        class="font-300 text-[20vw] text-black tracking-tighter whitespace-nowrap"
+      >
+        Testing Content
+      </h1>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src={img1.src} alt="test" />
+      </div>
+      <div class="card-content">
+        <div class="card-title"><h2>Card title</h2></div>
+        <div class="card-description">
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum
+            aliquid quam modi pariatur laudantium, hic eligendi, sint, quis
+            velit vero perspiciatis ab est tempore vel amet nobis culpa odio
+            ipsam!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src={img1.src} alt="test" />
+      </div>
+      <div class="card-content">
+        <div class="card-title"><h2>Card title</h2></div>
+        <div class="card-description">
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum
+            aliquid quam modi pariatur laudantium, hic eligendi, sint, quis
+            velit vero perspiciatis ab est tempore vel amet nobis culpa odio
+            ipsam!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src={img1.src} alt="test" />
+      </div>
+      <div class="card-content">
+        <div class="card-title"><h2>Card title</h2></div>
+        <div class="card-description">
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum
+            aliquid quam modi pariatur laudantium, hic eligendi, sint, quis
+            velit vero perspiciatis ab est tempore vel amet nobis culpa odio
+            ipsam!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src={img1.src} alt="test" />
+      </div>
+      <div class="card-content">
+        <div class="card-title"><h2>Card title</h2></div>
+        <div class="card-description">
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum
+            aliquid quam modi pariatur laudantium, hic eligendi, sint, quis
+            velit vero perspiciatis ab est tempore vel amet nobis culpa odio
+            ipsam!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="outer">
+    <p class="text-secondary-800">(your next section goes here)</p>
+  </section>
+</Layout>
+
+<style>
+  section {
+    @apply w-screen h-screen overflow-hidden;
+  }
+  .hero {
+    background: url(./_assets/webinar_banner.png) no-repeat 50% 50%;
+    background-size: cover;
+  }
+  .outer {
+    @apply flex justify-center items-center bg-black;
+  }
+  .card {
+    @apply absolute top-[10%] left-full w-[350px] h-[500px] rounded-3xl p-[0.5em] will-change-transform;
+    @apply z-2 bg-black;
+  }
+  .card .card-img {
+    @apply w-full h-[200px] overflow-hidden rounded-[0.5em];
+  }
+  .card-content {
+    @apply w-full h-[275px] flex flex-col justify-between text-white p-[0.5em];
+  }
+  .card-content h2 {
+    @apply text-40 font-300 tracking-tighter;
+  }
+  .card-content p {
+    @apply text-20 font-300 tracking-tighter;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const handleAnimation = () => {
+    const stcikeSect_elem = document.getElementById("sticky") as HTMLElement;
+    const stickey_header = document.querySelector(
+      ".sticky-header h1"
+    ) as HTMLElement;
+
+    const card_elem = Array.from([
+      ...document.querySelectorAll(".card"),
+    ]) as HTMLElement[];
+
+    const stickeyHeight = window.innerHeight * 5;
+
+    const transform = [
+      [
+        [10, 50, -10, 10],
+        [20, -10, -45, 20],
+      ],
+      [
+        [0, 47.5, -10, 15],
+        [-25, 15, -45, 30],
+      ],
+      [
+        [0, 52.5, -10, 5],
+        [15, -5, -40, 60],
+      ],
+      [
+        [0, 50, 30, -80],
+        [20, -10, -60, 5],
+      ],
+      [
+        [0, 55, -15, 30],
+        [25, -15, -60, 95],
+      ],
+    ];
+
+    // first set for the y position
+    //second set for how much it gonne rotate
+
+    gsap.registerPlugin(ScrollTrigger);
+    if (!stcikeSect_elem || !stickey_header || card_elem.length < 0) {
+      console.log(
+        `element not founded sticky header ${stickey_header} sticke section ${stcikeSect_elem} cardelement ${card_elem}`
+      );
+    }
+
+    ScrollTrigger.create({
+      trigger: stcikeSect_elem,
+      start: "top top",
+      end: `+=${stickeyHeight}px`,
+      pin: true,
+      pinSpacing: true,
+      scrub: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const maxTranslete = stickey_header.offsetWidth - window.innerWidth;
+        const translateX = -progress * maxTranslete;
+        gsap.set(stickey_header, { x: translateX });
+
+        card_elem.forEach((card, index) => {
+          const delay = index * 0.1125;
+          const cardProgress = Math.max(0, Math.min((progress - delay) * 2));
+          if (cardProgress > 0) {
+            const cardStaretX = 25;
+            const cardEndX = -650;
+            const yPos = transform[index][0];
+            const rotation = transform[index][1];
+
+            const cardX = gsap.utils.interpolate(
+              cardStaretX,
+              cardEndX,
+              cardProgress
+            );
+
+            const yProgress = cardProgress * 3;
+            const yIndex = Math.min(Math.floor(yProgress), yPos.length - 2);
+            const yInterpolation = yProgress - yIndex;
+
+            const cardY = gsap.utils.interpolate(
+              yPos[yIndex],
+              yPos[yIndex + 1],
+              yInterpolation
+            );
+
+            const cardRotation = gsap.utils.interpolate(
+              rotation[yIndex],
+              rotation[yIndex + 1],
+              yInterpolation
+            );
+
+            gsap.set(card, {
+              xPercent: cardX,
+              yPercent: cardY,
+              rotation: cardRotation,
+              opacity: 1,
+            });
+          } else {
+            gsap.set(card, {
+              opacity: 0,
+            });
+          }
+        });
+      },
+    });
+  };
+  handleAnimation();
+</script>
