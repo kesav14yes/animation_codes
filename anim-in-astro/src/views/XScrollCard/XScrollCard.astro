@@ -9,8 +9,8 @@ import img1 from "./_assets/blog_1.jpg";
   >
     <div class="logo flex-1"></div>
     <div class="nav-items flex-1 flex justify-center gap-2">
-      <a href="#" class="text-24">catalog</a>
-      <a href="#" class="text-24">cart</a>
+      <a href="#" class="text-24">scroll</a>
+      <a href="#" class="text-24">down</a>
     </div>
   </nav>
   <section class="hero"></section>
@@ -184,7 +184,7 @@ import img1 from "./_assets/blog_1.jpg";
       onUpdate: (self) => {
         const progress = self.progress;
         const maxTranslete = stickey_header.offsetWidth - window.innerWidth;
-        const translateX = -progress * maxTranslete;
+        const translateX = -(progress * 2) * maxTranslete;
         gsap.set(stickey_header, { x: translateX });
 
         card_elem.forEach((card, index) => {
