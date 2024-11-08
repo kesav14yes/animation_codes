@@ -5,7 +5,7 @@ const GetBaseURL = () => {
     case Environment.PRODUCTION:
       return "/";
     case Environment.STAGING:
-      return "https://www.yesoryes.io/staging/_kesav/text-animation/";
+      return "https://www.yesoryes.io/staging/_kesav/anim-in-astro/";
     case Environment.DEVELOPMENT:
       return "/";
     default:
